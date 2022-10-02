@@ -35,8 +35,8 @@ main:
 	move $s3, $v0
 	
 	# Creamos un contadores y acumuladores
-	addi $t0, $zero, 0	# CONTADOR (cuántas veces cabe) (t2=0)
-	addi $t1, $zero, 0	# ACUMULADOR (t1=0)
+	li $t0, 0		# CONTADOR (cuántas veces cabe) (t2=0)
+	li $t1, 0		# ACUMULADOR (t1=0)
 	abs $t2, $s2		# RESTO ($t2 = X)
 	abs $t3, $s2		# DIVIDENDO TEMPORAL ($t3 = X)
 	abs $s4, $s3		# Valor absoluto del DIVISOR
@@ -103,12 +103,13 @@ guardar:
 	add $t6, $t2, $zero 	# RESTO TEMPORAL (Usado para multiplicacion)
 	j multiplicar
 	
+## se multiplica el numero en el registro $t2 por 10, sumando
 multiplicar:
 	beq $t4, $t5, division
 	
 	add $t2, $t2, $t6
 	addi $t4, $t4, 1
-	addi $t3, $t2, 0
+	addi $t3, $t2, 0 # q hace esto?, es necesario hacerlo cada iteracion?
 	
 	j multiplicar
 	
