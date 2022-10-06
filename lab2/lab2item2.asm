@@ -9,9 +9,13 @@
 	mensaje6: .asciiz "Bz: "
 .text
 main:
+  	
 	jal obtVector
 	mtc1.d $v1, $f10
   	cvt.d.w $f10, $f10
+  	
+  	addi $sp, $sp, -4 # reservar stack
+  	sw $ra, 0($sp)	# guardar $ra en stack
 	jal newton
 	
 	li $v0, 3
@@ -94,6 +98,9 @@ obtVector:
 # $f10 entrada/ $f2 salida
 # $t0 iterador
 newton:
+  	addi $sp, $sp, -4 # reservar stack
+  	sw $ra, 0($sp)	# guardar $ra para volver a main en stack
+  	
 	# X0 = 1
 	ldc1 $f2, x0
 	# 2 constante
@@ -101,7 +108,13 @@ newton:
 	# iterador = 7
 	li $t0, 7
 	
-	newtonIt:
+	jal newtonIt
+	
+       	lw $ra, 0($sp) # cargar stack
+       	addi $sp, $sp, 4 # limpiar stack
+       	jr $ra
+	
+newtonIt:
 	# $f6 = (X*X - $f2) / 2*X
 	# X*X
 	mul.d $f6, $f2, $f2
@@ -116,7 +129,7 @@ newton:
 	
 	# mod. iterador
 	subi $t0, $t0, 1
-	
 	bnez $t0, newtonIt
+	
 	jr $ra
 	
